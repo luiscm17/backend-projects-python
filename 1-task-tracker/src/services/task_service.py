@@ -28,6 +28,8 @@ class TaskService:
         if status not in ["all", "in-progress", "done"]:
             raise ValueError("Invalid status: Use 'all', 'in-progress' or 'done'")
 
+        if status == "all":
+            return self.repository.find_all()
         return self.repository.find_by_status(status)
 
     def update_task(self, task_id: int, new_description: str) -> Task:
@@ -39,7 +41,7 @@ class TaskService:
         if not task:
             raise ValueError(f"Task with id {task_id} not found")
 
-        task.description = new_description.strip()
+        task.update_description(new_description.strip())
         self.repository.update_task(task)
         return task
 
