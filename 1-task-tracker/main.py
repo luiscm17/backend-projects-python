@@ -2,9 +2,15 @@ import sys
 from src.services.task_service import TaskService
 from src.repositories.task_respository import TaskRepository
 from src.utils.file_handler import FileHandler
+from src.interfaces.cli import TaskCommands
 
 
 def main():
+
+    file_handler = FileHandler()
+    repository = TaskRepository(file_handler)
+    service = TaskService(repository)
+    commands = TaskCommands()
 
     if len(sys.argv) < 2:
         print("Usage: task-cli <command> <args>")
@@ -20,9 +26,6 @@ def main():
         description = " ".join(sys.argv[2:])
 
         try:
-            file_handler = FileHandler()
-            repository = TaskRepository(file_handler)
-            service = TaskService(repository)
 
             task = service.add_task(description)
             print(f"Task added successfully (ID: {task.id})")
@@ -42,6 +45,20 @@ def main():
 
         except Exception as e:
             print(f"Error: {str(e)}")
+
+    elif command == "list":
+
+        if len(sys.argv) < 2:
+            status = sys.argv[2].lower()
+            try:
+                tasks = service.list_tasks_by_status(status)
+            except ValueError as e:
+                print(f"Error: {str(e)}")
+                return
+        else:
+            tasks = service.list_all_tasks()
+
+        print(commands.format_task_list(tasks))
 
     else:
         print("Invalid command, use 'add' to add a task")

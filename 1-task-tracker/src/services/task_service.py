@@ -1,7 +1,7 @@
+from typing import List
 from datetime import datetime
 from src.models.task import Task
 from src.repositories.task_respository import TaskRepository
-from src.utils.file_handler import FileHandler
 
 
 class TaskService:
@@ -18,6 +18,17 @@ class TaskService:
         task = Task(task_id, description)
         self.repository.save_task(task)
         return task
+
+    def list_all_tasks(self) -> List[Task]:
+        """List all tasks"""
+        return self.repository.find_all()
+
+    def list_tasks_by_status(self, status: str) -> List[Task]:
+        """List tasks by status"""
+        if status not in ["all", "in-progress", "done"]:
+            raise ValueError("Invalid status: Use 'all', 'in-progress' or 'done'")
+
+        return self.repository.find_by_status(status)
 
     def update_task(self, task_id: int, new_description: str) -> Task:
         """Update task description"""
