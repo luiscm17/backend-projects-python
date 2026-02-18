@@ -73,6 +73,28 @@ def main():
         except Exception as e:
             print(f"Error: {str(e)}")
 
+    elif command == "in-progress":
+        if len(sys.argv) < 3:
+            print("Error: Task ID is required")
+
+        try:
+            task_id = int(sys.argv[2])
+            task = service.mark_task_in_progress(task_id)
+            print(f"Task {task_id} marked as in-progress")
+        except ValueError as e:
+            print(f"Error: {str(e)}")
+
+    elif command == "done":
+        if len(sys.argv) < 3:
+            print("Error: Task ID is required")
+            return
+        try:
+            task_id = int(sys.argv[2])
+            task = service.mark_task_done(task_id)
+            print(f"Task {task_id} marked as done")
+        except ValueError as e:
+            print(f"Error: {str(e)}")
+
     else:
         print("Invalid command, use 'add' to add a task")
 
