@@ -67,3 +67,14 @@ class TaskRepository:
                 tasks_data[i] = task.to_dict()
                 break
         self.file_handler.write_task(tasks_data)
+
+    def delete_task(self, task_id: int) -> bool:
+        """Delete task by id"""
+        tasks_data = self.file_handler.read_task()
+
+        for i, task_data in enumerate(tasks_data):
+            if task_data["id"] == task_id:
+                del tasks_data[i]
+                self.file_handler.write_task(tasks_data)
+                return True
+        return False

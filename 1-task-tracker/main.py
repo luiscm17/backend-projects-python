@@ -60,6 +60,19 @@ def main():
 
         print(commands.format_task_list(tasks))
 
+    elif command == "delete":
+        if len(sys.argv) < 3:
+            print("Error: Task ID is required")
+            return
+        try:
+            task_id = int(sys.argv[2])
+            service.delete_task(task_id)
+            print(f"Task {task_id} deleted successfully")
+        except ValueError as e:
+            print(f"Error: {str(e)}")
+        except Exception as e:
+            print(f"Error: {str(e)}")
+
     else:
         print("Invalid command, use 'add' to add a task")
 

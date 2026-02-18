@@ -42,3 +42,12 @@ class TaskService:
         task.description = new_description.strip()
         self.repository.update_task(task)
         return task
+
+    def delete_task(self, task_id: int) -> bool:
+        """Delete task by id"""
+        task = self.repository.find_by_id(task_id)
+
+        if not task:
+            raise ValueError(f"Task with id {task_id} not found")
+
+        return self.repository.delete_task(task_id)
