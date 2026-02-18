@@ -24,3 +24,10 @@ class Task:
         """Update task description and timestamp"""
         self.description = new_description
         self.updated_at = datetime.now().isoformat()
+
+    def update_status(self, new_status: str):
+        """Update task status and timestamp"""
+        if new_status not in ["all", "in-progress", "done"]:
+            raise ValueError("Invalid status: Use 'all', 'in-progress' or 'done'")
+        self.status = new_status
+        self.updated_at = datetime.now().isoformat()
