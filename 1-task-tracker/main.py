@@ -30,6 +30,19 @@ def main():
         except Exception as e:
             print(f"Error: {str(e)}")
 
+    elif command == "update":
+        if len(sys.argv) < 4:
+            print("Error: Task ID and description are required")
+            return
+        try:
+            task_id = int(sys.argv[2])
+            new_description = " ".join(sys.argv[3:])
+            task = service.update_task(task_id, new_description)
+            print(f"Task {task.id} updated successfully")
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+
     else:
         print("Invalid command, use 'add' to add a task")
 
