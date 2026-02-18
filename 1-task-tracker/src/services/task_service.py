@@ -51,3 +51,22 @@ class TaskService:
             raise ValueError(f"Task with id {task_id} not found")
 
         return self.repository.delete_task(task_id)
+
+    def mark_task_in_progress(self, task_id: int) -> Task:
+        """Mark task as in progress"""
+        task = self.repository.find_by_id(task_id)
+        if not task:
+            raise ValueError(f"Task with ID {task_id} not found")
+
+        task.update_status("in-progress")
+        self.repository.update_task(task)
+        return task
+
+    def mark_task_done(self, task_id: int) -> Task:
+        """Mark task as done"""
+        task = self.repository.find_by_id(task_id)
+        if not task:
+            raise ValueError(f"Task with ID {task_id} not found")
+        task.update_status("done")
+        self.repository.update_task(task)
+        return task
