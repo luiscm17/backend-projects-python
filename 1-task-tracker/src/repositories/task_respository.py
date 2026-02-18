@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from src.models.task import Task
 from src.utils.file_handler import FileHandler
 
@@ -8,12 +8,37 @@ class TaskRepository:
         self.file_handler = file_handler
 
     def get_next_id(self) -> int:
+        """Get next id"""
         tasks_data = self.file_handler.read_task()
         if not tasks_data:
             return 1
         return max(task["id"] for task in tasks_data) + 1
 
     def save_task(self, task: Task) -> None:
+        """Save task"""
         tasks_data = self.file_handler.read_task()
         tasks_data.append(task.to_dict())
+        self.file_handler.write_task(tasks_data)
+
+    def find_by_id(self, task_id: int) -> Optional[Task]:
+        """Find task by id"""
+        tasks_data = self.file_handler.read_task()
+        for task_data in tasks_data:
+            if task_data["id"] == task_id:
+                task = Task(
+                    task_data["id"], task_data["description"], task_data["status"]
+                )
+                task.created_at = task_data["created_at"]
+                task.updated_at = task_data["updated_at"]
+                return task
+        return None
+
+    def update_task(self, task: Task) -> None:
+        """Update task"""
+        tasks_data = self.file_handler.read_task()
+
+        for i, task_data in enumerate(tasks_data):
+            if task_data["id"] == task.id:
+                tasks_data[i] = task.to_dict()
+                break
         self.file_handler.write_task(tasks_data)
