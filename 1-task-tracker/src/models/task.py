@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 
 class Task:
-    def __init__(self, id: int, description: str, status: str = "all"):
+    def __init__(self, id: int, description: str, status: str = "in-progress"):
         self.id = id
         self.description = description
         self.status = status

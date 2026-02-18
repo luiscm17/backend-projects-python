@@ -33,6 +33,31 @@ class TaskRepository:
                 return task
         return None
 
+    def find_all(self) -> List[Task]:
+        """Get all tasks"""
+        tasks_data = self.file_handler.read_task()
+        tasks = []
+        for task_data in tasks_data:
+            task = Task(task_data["id"], task_data["description"], task_data["status"])
+            task.created_at = task_data["created_at"]
+            task.updated_at = task_data["updated_at"]
+            tasks.append(task)
+        return tasks
+
+    def find_by_status(self, status: str) -> List[Task]:
+        """Get task by status"""
+        tasks_data = self.file_handler.read_task()
+        tasks = []
+        for task_data in tasks_data:
+            if task_data["status"] == status:
+                task = Task(
+                    task_data["id"], task_data["description"], task_data["status"]
+                )
+                task.created_at = task_data["created_at"]
+                task.updated_at = task_data["updated_at"]
+                tasks.append(task)
+        return tasks
+
     def update_task(self, task: Task) -> None:
         """Update task"""
         tasks_data = self.file_handler.read_task()
