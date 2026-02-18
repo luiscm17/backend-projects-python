@@ -11,6 +11,7 @@ class Task:
         self.updated_at = self.created_at
 
     def to_dict(self) -> Dict[str, Any]:
+        """Convert task to dictionary"""
         return {
             "id": self.id,
             "description": self.description,
@@ -18,3 +19,8 @@ class Task:
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
+
+    def update_description(self, new_description: str):
+        """Update task description and timestamp"""
+        self.description = new_description
+        self.updated_at = datetime.now().isoformat()
