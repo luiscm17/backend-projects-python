@@ -1,9 +1,12 @@
 import sys
+from src.container.di_container import DIContainer
 from src.cli.app import TaskCLI
 
 
 def main():
-    cli = TaskCLI()
+    """Main entry point with dependency injection"""
+    container = DIContainer()
+    cli = TaskCLI(container)
     cli.run(sys.argv)
 
 
