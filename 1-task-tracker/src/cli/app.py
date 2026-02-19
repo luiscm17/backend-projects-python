@@ -14,6 +14,7 @@ class TaskCLI:
             "update": UpdateCommand(),
             "delete": DeleteCommand(),
             "list": ListCommand(),
+            "todo": TodoCommand(),
             "in-progress": InProgressCommand(),
             "done": DoneCommand(),
         }
@@ -25,6 +26,11 @@ class TaskCLI:
         print(" update <id> <description> - Update a task")
         print(" delete <id>             - Delete a task")
         print(" list [status]           - List all tasks")
+        print(" list all                - List all tasks")
+        print(" list todo               - List tasks with todo status")
+        print(" list in-progress        - List tasks with in-progress status")
+        print(" list done               - List tasks with done status")
+        print(" todo <id>               - Mark a task as todo")
         print(" in-progress <id>        - Mark a task as in progress")
         print(" done <id>               - Mark a task as done")
 
