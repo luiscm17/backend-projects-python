@@ -25,8 +25,10 @@ class TaskService:
 
     def list_tasks_by_status(self, status: str) -> List[Task]:
         """List tasks by status"""
-        if status not in ["all", "in-progress", "done"]:
-            raise ValueError("Invalid status: Use 'all', 'in-progress' or 'done'")
+        if status not in ["all", "todo", "in-progress", "done"]:
+            raise ValueError(
+                "Invalid status: Use 'all', 'todo', 'in-progress' or 'done'"
+            )
 
         if status == "all":
             return self.repository.find_all()
@@ -53,6 +55,16 @@ class TaskService:
             raise ValueError(f"Task with id {task_id} not found")
 
         return self.repository.delete_task(task_id)
+
+    def mark_task_todo(self, task_id: int) -> Task:
+        """Mark task as todo"""
+        task = self.repository.find_by_id(task_id)
+        if not task:
+            raise ValueError(f"Task with ID {task_id} not found")
+
+        task.update_status("todo")
+        self.repository.update_task(task)
+        return task
 
     def mark_task_in_progress(self, task_id: int) -> Task:
         """Mark task as in progress"""
