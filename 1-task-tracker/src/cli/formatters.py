@@ -34,7 +34,7 @@ class TaskFormatter:
         Format a success message for a task operation.
 
         Args:
-            action: The action performed (add, update, delete, in-progress, done)
+            action: The action performed (add, update, delete, todo, in-progress, done)
             task_id: The ID of the task
 
         Returns:
@@ -44,6 +44,7 @@ class TaskFormatter:
             "add": f"Task ID:{task_id} added successfully",
             "update": f"Task ID:{task_id} updated successfully",
             "delete": f"Task ID:{task_id} deleted successfully",
+            "todo": f"Task ID:{task_id} marked as todo",
             "in-progress": f"Task ID:{task_id} marked as in progress",
             "done": f"Task ID:{task_id} marked as done",
         }

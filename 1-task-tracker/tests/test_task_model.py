@@ -15,7 +15,7 @@ class TestTaskModel(unittest.TestCase):
     def test_task_creation(self):
         self.assertEqual(self.task.id, 1)
         self.assertEqual(self.task.description, "Test Task")
-        self.assertEqual(self.task.status, "in-progress")
+        self.assertEqual(self.task.status, "todo")
         self.assertIsNotNone(self.task.created_at)
         self.assertIsNotNone(self.task.updated_at)
 
