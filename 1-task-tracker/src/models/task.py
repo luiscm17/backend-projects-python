@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 
 class Task:
-    def __init__(self, id: int, description: str, status: str = "in-progress"):
+    def __init__(self, id: int, description: str, status: str = "todo"):
         self.id = id
         self.description = description
         self.status = status
@@ -27,7 +27,7 @@ class Task:
 
     def update_status(self, new_status: str):
         """Update task status and timestamp"""
-        if new_status not in ["all", "in-progress", "done"]:
-            raise ValueError("Invalid status: Use 'all', 'in-progress' or 'done'")
+        if new_status not in ["todo", "in-progress", "done"]:
+            raise ValueError("Invalid status: Use 'todo', 'in-progress' or 'done'")
         self.status = new_status
         self.updated_at = datetime.now().isoformat()
