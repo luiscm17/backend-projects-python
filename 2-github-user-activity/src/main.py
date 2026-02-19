@@ -1,5 +1,6 @@
 import sys
 from github_api import gh_activity
+from formatter import format_activity
 
 
 def validate_args():
@@ -21,7 +22,13 @@ def main():
     username = validate_args()
     print(f"Searching for user: {username}")
     activity = gh_activity(username)
-    print(activity)
+    if isinstance(activity, str):
+        print(activity)
+    else:
+        messages = format_activity(activity)
+        print(f"User: {username}")
+        for message in messages:
+            print(message)
 
 
 if __name__ == "__main__":
