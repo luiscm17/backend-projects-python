@@ -1,4 +1,5 @@
 import sys
+from github_api import gh_activity
 
 
 def validate_args():
@@ -18,7 +19,9 @@ def main():
     print("GitHub User Activity CLI")
     print("Usage: python src/main.py <username>")
     username = validate_args()
-    print(f"Username: {username}")
+    print(f"Searching for user: {username}")
+    activity = gh_activity(username)
+    print(activity)
 
 
 if __name__ == "__main__":
