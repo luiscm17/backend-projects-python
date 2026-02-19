@@ -92,6 +92,21 @@ class ListCommand(BaseCommand):
             print(f"Error: {str(e)}")
 
 
+class TodoCommand(BaseCommand):
+    """Command to list tasks with todo status"""
+
+    def execute(self, args: List[str]) -> None:
+        task_id = ArgumentValidator.validate_task_id(args)
+        if task_id is None:
+            return
+
+        try:
+            self.service.mark_task_todo(task_id)
+            print(self.formatter.format_success_message("todo", task_id))
+        except ValueError as e:
+            print(f"Error: {str(e)}")
+
+
 class InProgressCommand(BaseCommand):
     """Command to mark a task as in progress"""
 
