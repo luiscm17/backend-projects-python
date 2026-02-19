@@ -28,7 +28,7 @@ class TestFileHandler(unittest.TestCase):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
 
-        tasks = self.file_handler.read_task()
+        tasks = self.file_handler.read_tasks()
         self.assertEqual(tasks, [])
 
     def test_read_task_empty_file(self):
@@ -37,7 +37,7 @@ class TestFileHandler(unittest.TestCase):
         with open(self.test_file, "w") as f:
             f.write("")
 
-        tasks = self.file_handler.read_task()
+        tasks = self.file_handler.read_tasks()
         self.assertEqual(tasks, [])
 
     def test_read_task_invalid_json(self):
@@ -46,7 +46,7 @@ class TestFileHandler(unittest.TestCase):
         with open(self.test_file, "w") as f:
             f.write("invalid json content")
 
-        tasks = self.file_handler.read_task()
+        tasks = self.file_handler.read_tasks()
         self.assertEqual(tasks, [])
 
     def test_read_task_valid_json(self):
@@ -59,7 +59,7 @@ class TestFileHandler(unittest.TestCase):
         with open(self.test_file, "w") as f:
             json.dump(test_data, f)
 
-        tasks = self.file_handler.read_task()
+        tasks = self.file_handler.read_tasks()
         self.assertEqual(len(tasks), 2)
         self.assertEqual(tasks[0]["id"], 1)
         self.assertEqual(tasks[1]["description"], "Task 2")
@@ -67,7 +67,7 @@ class TestFileHandler(unittest.TestCase):
     def test_write_task_empty_list(self):
         """Test writing empty task list"""
         tasks = []
-        self.file_handler.write_task(tasks)
+        self.file_handler.write_tasks(tasks)
 
         # Verify file was created and contains empty list
         self.assertTrue(os.path.exists(self.test_file))
@@ -82,7 +82,7 @@ class TestFileHandler(unittest.TestCase):
             {"id": 2, "description": "Task 2", "status": "done"},
         ]
 
-        self.file_handler.write_task(tasks)
+        self.file_handler.write_tasks(tasks)
 
         # Verify file was created and contains correct data
         self.assertTrue(os.path.exists(self.test_file))
@@ -96,11 +96,11 @@ class TestFileHandler(unittest.TestCase):
         """Test that write_task overwrites existing content"""
         # Write initial data
         initial_tasks = [{"id": 1, "description": "Initial Task"}]
-        self.file_handler.write_task(initial_tasks)
+        self.file_handler.write_tasks(initial_tasks)
 
         # Write new data
         new_tasks = [{"id": 2, "description": "New Task"}]
-        self.file_handler.write_task(new_tasks)
+        self.file_handler.write_tasks(new_tasks)
 
         # Verify only new data exists
         with open(self.test_file, "r") as f:
