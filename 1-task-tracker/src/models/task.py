@@ -11,7 +11,12 @@ class Task:
         self.updated_at = self.created_at
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert task to dictionary"""
+        """
+        Convert task to dictionary
+
+        Returns:
+            Dictionary representation of the task
+        """
         return {
             "id": self.id,
             "description": self.description,
@@ -21,12 +26,20 @@ class Task:
         }
 
     def update_description(self, new_description: str):
-        """Update task description and timestamp"""
+        """Update task description and timestamp
+
+        Args:
+            new_description: New task description
+        """
         self.description = new_description
         self.updated_at = datetime.now().isoformat()
 
     def update_status(self, new_status: str):
-        """Update task status and timestamp"""
+        """Update task status and timestamp
+
+        Args:
+            new_status: New task status
+        """
         if new_status not in ["todo", "in-progress", "done"]:
             raise ValueError("Invalid status: Use 'todo', 'in-progress' or 'done'")
         self.status = new_status
