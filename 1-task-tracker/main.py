@@ -4,7 +4,12 @@ from src.cli.app import TaskCLI
 
 
 def main():
-    """Main entry point with dependency injection"""
+    """
+    Main entry point with dependency injection
+
+    Returns:
+        None
+    """
     container = DIContainer()
     cli = TaskCLI(container)
     cli.run(sys.argv)

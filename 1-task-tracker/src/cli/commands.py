@@ -21,6 +21,12 @@ class AddCommand(BaseCommand):
     """Command to add a new task"""
 
     def execute(self, args: List[str]) -> None:
+        """
+        Execute the add command.
+
+        Args:
+            args: List of command line arguments
+        """
         description = ArgumentValidator.validate_description(args)
         if description is None:
             return
@@ -36,6 +42,12 @@ class UpdateCommand(BaseCommand):
     """Command to update a task description"""
 
     def execute(self, args: List[str]) -> None:
+        """
+        Execute the update command.
+
+        Args:
+            args: List of command line arguments
+        """
         if len(args) < 4:
             print("Error: Task ID and new description are required")
             return
@@ -56,6 +68,12 @@ class DeleteCommand(BaseCommand):
     """Command to delete a task"""
 
     def execute(self, args: List[str]) -> None:
+        """
+        Execute the delete command.
+
+        Args:
+            args: List of command line arguments
+        """
         task_id = ArgumentValidator.validate_task_id(args)
         if task_id is None:
             return
@@ -71,6 +89,12 @@ class ListCommand(BaseCommand):
     """Command to list tasks"""
 
     def execute(self, args: List[str]) -> None:
+        """
+        Execute the list command.
+
+        Args:
+            args: List of command line arguments
+        """
         status_filter = ArgumentValidator.validate_list_args(args)
 
         try:
@@ -85,9 +109,15 @@ class ListCommand(BaseCommand):
 
 
 class TodoCommand(BaseCommand):
-    """Command to list tasks with todo status"""
+    """Command to mark a task as todo"""
 
     def execute(self, args: List[str]) -> None:
+        """
+        Execute the todo command.
+
+        Args:
+            args: List of command line arguments
+        """
         task_id = ArgumentValidator.validate_task_id(args)
         if task_id is None:
             return
@@ -103,6 +133,12 @@ class InProgressCommand(BaseCommand):
     """Command to mark a task as in progress"""
 
     def execute(self, args: List[str]) -> None:
+        """
+        Execute the in progress command.
+
+        Args:
+            args: List of command line arguments
+        """
         task_id = ArgumentValidator.validate_task_id(args)
         if task_id is None:
             return
@@ -118,6 +154,12 @@ class DoneCommand(BaseCommand):
     """Command to mark a task as done"""
 
     def execute(self, args: List[str]) -> None:
+        """
+        Execute the done command.
+
+        Args:
+            args: List of command line arguments
+        """
         task_id = ArgumentValidator.validate_task_id(args)
         if task_id is None:
             return

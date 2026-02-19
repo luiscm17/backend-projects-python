@@ -12,7 +12,12 @@ class TaskCLI:
         self.commands = self._register_commands()
 
     def _register_commands(self) -> Dict[str, any]:
-        """Register all available commands using DI container"""
+        """
+        Register all available commands using DI container
+
+        Returns:
+            Dictionary of command names to command instances
+        """
         return {
             "add": self.container.create_command("add"),
             "update": self.container.create_command("update"),
@@ -24,6 +29,9 @@ class TaskCLI:
         }
 
     def _show_usage(self) -> None:
+        """
+        Show usage information
+        """
         print("Usage: task-cli <command> [arguments]")
         print("Available commands:")
         print(" add <description>       - Add a new task")
@@ -39,7 +47,12 @@ class TaskCLI:
         print(" done <id>               - Mark a task as done")
 
     def run(self, args: List[str]) -> None:
-        """Run the CLI application"""
+        """
+        Run the CLI application
+
+        Args:
+            args: List of command line arguments
+        """
         if len(args) < 2:
             self._show_usage()
             return
