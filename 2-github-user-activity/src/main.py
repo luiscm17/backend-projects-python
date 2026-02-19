@@ -1,0 +1,25 @@
+import sys
+
+
+def validate_args():
+    if len(sys.argv) != 2:
+        print("Usage: python serc/main.py <username>")
+        sys.exit(1)
+
+    username = sys.argv[1]
+    if not username.strip():
+        print("Username cannot be empty")
+        sys.exit(1)
+
+    return username
+
+
+def main():
+    print("GitHub User Activity CLI")
+    print("Usage: python src/main.py <username>")
+    username = validate_args()
+    print(f"Username: {username}")
+
+
+if __name__ == "__main__":
+    main()
