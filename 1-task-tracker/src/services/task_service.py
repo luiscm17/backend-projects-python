@@ -1,11 +1,11 @@
 from typing import List
 from datetime import datetime
 from src.models.task import Task
-from src.repositories.task_respository import TaskRepository
+from src.repositories.task_repository_db import TaskRepositoryDB
 
 
 class TaskService:
-    def __init__(self, repository: TaskRepository):
+    def __init__(self, repository: TaskRepositoryDB):
         self.repository = repository
 
     def add_task(self, description: str) -> Task:

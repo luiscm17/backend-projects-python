@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
 from src.services.task_service import TaskService
-from src.repositories.task_respository import TaskRepository
-from src.utils.file_handler import FileHandler
 from src.cli.validators import ArgumentValidator
 from src.cli.formatters import TaskFormatter
 
@@ -10,15 +8,9 @@ from src.cli.formatters import TaskFormatter
 class BaseCommand(ABC):
     """Base class for all CLI commands"""
 
-    def __init__(self):
-        self.service = self._create_service()
-        self.formatter = TaskFormatter()
-
-    def _create_service(self) -> TaskService:
-        """Create and return a TaskService instance"""
-        file_handler = FileHandler()
-        repository = TaskRepository(file_handler)
-        return TaskService(repository)
+    def __init__(self, service: TaskService, formatter: TaskFormatter):
+        self.service = service
+        self.formatter = formatter
 
     @abstractmethod
     def execute(self, args: List[str]) -> None:

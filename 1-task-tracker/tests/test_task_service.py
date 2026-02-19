@@ -9,17 +9,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.models.task import Task
 from src.services.task_service import TaskService
-from src.repositories.task_respository import TaskRepository
-from src.utils.file_handler import FileHandler
+from src.repositories.task_repository_db import TaskRepositoryDB
+from src.utils.db_handler import DBHandler
 
 
 class TestTaskService(unittest.TestCase):
     def setUp(self):
         # Create a temporary directory for test files
         self.test_dir = tempfile.mkdtemp()
-        self.test_file = os.path.join(self.test_dir, "test_tasks.json")
-        self.file_handler = FileHandler(self.test_file)
-        self.repository = TaskRepository(self.file_handler)
+        self.test_file = os.path.join(self.test_dir, "test_tasks.db")
+        self.db_handler = DBHandler(self.test_file)
+        self.repository = TaskRepositoryDB(self.db_handler)
         self.service = TaskService(self.repository)
 
     def tearDown(self):

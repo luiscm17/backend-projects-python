@@ -1,22 +1,26 @@
 import sys
 from typing import List, Dict
-from src.cli.commands import *
+from src.container.di_container import DIContainer
 from src.cli.validators import ArgumentValidator
 
 
 class TaskCLI:
-    def __init__(self):
+    """Main CLI application class with dependency injection"""
+
+    def __init__(self, container: DIContainer = None):
+        self.container = container or DIContainer()
         self.commands = self._register_commands()
 
-    def _register_commands(self) -> Dict[str, BaseCommand]:
+    def _register_commands(self) -> Dict[str, any]:
+        """Register all available commands using DI container"""
         return {
-            "add": AddCommand(),
-            "update": UpdateCommand(),
-            "delete": DeleteCommand(),
-            "list": ListCommand(),
-            "todo": TodoCommand(),
-            "in-progress": InProgressCommand(),
-            "done": DoneCommand(),
+            "add": self.container.create_command("add"),
+            "update": self.container.create_command("update"),
+            "delete": self.container.create_command("delete"),
+            "list": self.container.create_command("list"),
+            "todo": self.container.create_command("todo"),
+            "in-progress": self.container.create_command("in-progress"),
+            "done": self.container.create_command("done"),
         }
 
     def _show_usage(self) -> None:
@@ -35,6 +39,7 @@ class TaskCLI:
         print(" done <id>               - Mark a task as done")
 
     def run(self, args: List[str]) -> None:
+        """Run the CLI application"""
         if len(args) < 2:
             self._show_usage()
             return
