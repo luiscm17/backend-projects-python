@@ -13,6 +13,9 @@ class DBHandler:
         self._initialize_database()
 
     def _initialize_database(self):
+        """
+        Initialize the database
+        """
         conn = sqlite3.connect(self.db_path)
         conn.execute(
             """
@@ -30,6 +33,12 @@ class DBHandler:
         conn.close()
 
     def save_task(self, task: "Task") -> None:
+        """
+        Save a task to the database
+
+        Args:
+            task: Task to save
+        """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
@@ -48,6 +57,12 @@ class DBHandler:
         conn.close()
 
     def get_all_tasks(self) -> List[Dict[str, Any]]:
+        """
+        Get all tasks from the database
+
+        Returns:
+            List of all tasks
+        """
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
@@ -63,6 +78,12 @@ class DBHandler:
         return [dict(row) for row in rows]
 
     def update_task(self, task: "Task") -> None:
+        """
+        Update a task in the database
+
+        Args:
+            task: Task to update
+        """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
@@ -77,6 +98,15 @@ class DBHandler:
         conn.close()
 
     def delete_task(self, task_id: int) -> bool:
+        """
+        Delete a task from the database
+
+        Args:
+            task_id: Task ID to delete
+
+        Returns:
+            True if task was deleted, False otherwise
+        """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
