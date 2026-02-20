@@ -1,6 +1,7 @@
 import sys
 from github_api import gh_activity
 from formatter import format_activity
+from utils import validate_name
 
 
 def validate_args():
@@ -8,9 +9,10 @@ def validate_args():
         print("Usage: python serc/main.py <username>")
         sys.exit(1)
 
-    username = sys.argv[1]
-    if not username.strip():
-        print("Username cannot be empty")
+    username = sys.argv[1].strip()
+    is_valid, message = validate_name(username)
+    if not is_valid:
+        print(message)
         sys.exit(1)
 
     return username
