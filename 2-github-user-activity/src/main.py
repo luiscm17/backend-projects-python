@@ -1,0 +1,43 @@
+import sys
+from github_api import gh_activity, get_user_activity
+from formatter import format_activity
+from utils import validate_name
+
+
+def validate_args():
+    """Validate the command line arguments
+
+    Returns:
+        str: GitHub username
+    """
+    if len(sys.argv) != 2:
+        print("Usage: python serc/main.py <username>")
+        sys.exit(1)
+
+    username = sys.argv[1].strip()
+    is_valid, message = validate_name(username)
+    if not is_valid:
+        print(message)
+        sys.exit(1)
+
+    return username
+
+
+def main():
+    """Main function"""
+    print("GitHub User Activity CLI")
+    print("Usage: python src/main.py <username>")
+    username = validate_args()
+    print(f"Searching for user: {username}")
+    activity = get_user_activity(username)
+    if isinstance(activity, str):
+        print(activity)
+    else:
+        messages = format_activity(activity)
+        print(f"User: {username}")
+        for message in messages:
+            print(message)
+
+
+if __name__ == "__main__":
+    main()
