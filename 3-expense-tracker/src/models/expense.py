@@ -9,12 +9,14 @@ class Expense:
     Expense data model.
     Attributes:
         id (int): The unique identifier of the expense.
+        description (str): The description of the expense.
         amount (float): The amount of the expense.
         date (datetime): The date of the expense.
         category (Optional[str]): The category of the expense.
     """
 
     id: int
+    description: str
     amount: float
     date: datetime
     category: Optional[str] = None
