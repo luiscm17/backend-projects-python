@@ -50,26 +50,26 @@ class StorageInterface(ABC):
 
 
 class JsonStorage(StorageInterface):
-    """Implementación de almacenamiento usando archivos JSON."""
+    """Implementation of storage using JSON files."""
 
     def __init__(self, file_path: Optional[Path] = None):
         """
-        Inicializa el almacenamiento JSON.
+        Initialize the JSON storage.
 
         Args:
-            file_path: Ruta al archivo JSON (opcional)
+            file_path: Path to the JSON file (optional)
         """
         self._file_path = get_expenses_file_path() or file_path
 
     def _load_data(self) -> List[Dict[str, Any]]:
         """
-        Carga los datos desde el archivo JSON.
+        Load data from the JSON file.
 
         Returns:
-            List[Dict]: Lista de diccionarios con los datos
+            List[Dict]: List of dictionaries with the data
 
         Raises:
-            RepositoryError: Si hay error al leer el archivo
+            RepositoryError: If there is an error reading the file
         """
         try:
             if not self._file_path.exists():
@@ -87,13 +87,13 @@ class JsonStorage(StorageInterface):
 
     def _save_data(self, data: List[Dict[str, Any]]) -> None:
         """
-        Guarda los datos al archivo JSON.
+        Save data to the JSON file.
 
         Args:
-            data: Datos a guardar
+            data: Data to save
 
         Raises:
-            RepositoryError: Si hay error al escribir el archivo
+            RepositoryError: If there is an error writing the file
         """
         try:
             with open(self._file_path, "w", encoding="utf-8") as f:
@@ -103,7 +103,7 @@ class JsonStorage(StorageInterface):
             raise RepositoryError(f"Error writing file: {e}")
 
     def _expense_to_dict(self, expense: Expense) -> Dict[str, Any]:
-        """Convierte un Expense a diccionario."""
+        """Convert an Expense to a dictionary."""
         return {
             "id": expense.id,
             "description": expense.description,
@@ -113,7 +113,7 @@ class JsonStorage(StorageInterface):
         }
 
     def _dict_to_expense(self, data: Dict[str, Any]) -> Expense:
-        """Convierte un diccionario a Expense."""
+        """Convert a dictionary to an Expense."""
         from datetime import datetime
 
         return Expense(
@@ -125,10 +125,9 @@ class JsonStorage(StorageInterface):
         )
 
     def save_expense(self, expense: Expense) -> Expense:
-        """Guarda un gasto."""
+        """Save an expense."""
         data = self._load_data()
 
-        # Verificar si ya existe un gasto con ese ID
         data = [d for d in data if d["id"] != expense.id]
         data.append(self._expense_to_dict(expense))
 
@@ -136,7 +135,7 @@ class JsonStorage(StorageInterface):
         return expense
 
     def get_expense(self, id: int) -> Optional[Expense]:
-        """Obtiene un gasto por ID."""
+        """Get an expense by ID."""
         data = self._load_data()
 
         for item in data:
@@ -146,12 +145,12 @@ class JsonStorage(StorageInterface):
         return None
 
     def get_all_expenses(self) -> List[Expense]:
-        """Obtiene todos los gastos."""
+        """Get all expenses."""
         data = self._load_data()
         return [self._dict_to_expense(item) for item in data]
 
     def delete_expense(self, id: int) -> bool:
-        """Elimina un gasto."""
+        """Delete an expense by ID."""
         data = self._load_data()
         original_length = len(data)
 
@@ -164,7 +163,7 @@ class JsonStorage(StorageInterface):
         return True
 
     def update_expense(self, expense: Expense) -> Expense:
-        """Actualiza un gasto."""
+        """Update an expense."""
         data = self._load_data()
 
         for i, item in enumerate(data):
@@ -173,5 +172,4 @@ class JsonStorage(StorageInterface):
                 self._save_data(data)
                 return expense
 
-        # Si no existe, lo agrega
         return self.save_expense(expense)

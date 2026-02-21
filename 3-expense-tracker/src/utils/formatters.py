@@ -1,7 +1,7 @@
 """
-Formateadores de salida.
+Output formatters for expense tracker.
 
-Este módulo contiene funciones para formatear la salida de datos.
+This module provides functions to format expense data for output.
 """
 
 from typing import List
@@ -10,28 +10,28 @@ from models.expense import Expense, ExpenseSummary
 
 def format_expense_table(expenses: List[Expense]) -> str:
     """
-    Formatea una lista de gastos como tabla.
+    Format a list of expenses as a table.
 
     Args:
-        expenses: Lista de gastos
+        expenses: List of expenses
 
     Returns:
-        str: Tabla formateada
+        str: Formatted table
     """
     if not expenses:
         return "No expenses found."
 
-    # Encabezado
+    # Header
     header = f"{'ID':<4} {'Date':<12} {'Description':<20} {'Amount':<10}"
     separator = "-" * len(header)
 
-    # Filas
+    # Rows
     rows = []
     for expense in expenses:
         date_str = expense.date.strftime("%Y-%m-%d")
         amount_str = f"${expense.amount:.2f}"
 
-        # Truncar descripción si es muy larga
+        # Truncate description if it's too long
         description = (
             expense.description[:17] + "..."
             if len(expense.description) > 20
@@ -46,13 +46,13 @@ def format_expense_table(expenses: List[Expense]) -> str:
 
 def format_summary(summary: ExpenseSummary) -> str:
     """
-    Formatea un resumen de gastos.
+    Format an expense summary.
 
     Args:
-        summary: Resumen de gastos
+        summary: Expense summary
 
     Returns:
-        str: Resumen formateado
+        str: Formatted summary
     """
     if summary.period.startswith("Month"):
         month_names = {
