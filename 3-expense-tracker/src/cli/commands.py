@@ -1,7 +1,20 @@
-from ast import arg
-from calendar import month
+"""
+CLI Commands Handler
+This module contains the command handlers for the CLI.
+"""
+
+import sys
 from datetime import datetime
 from typing import Dict, Any
+from services.expense_service import ExpenseService
+from models.storage import JsonStorage
+from models.exceptions import ExpenseTrackerError
+from utils.formatters import format_expense_table, format_summary
+
+
+def get_service() -> ExpenseService:
+    storage = JsonStorage()
+    return ExpenseService(storage)
 
 
 def cmd_add(args: Dict[str, Any]) -> None:
@@ -10,8 +23,13 @@ def cmd_add(args: Dict[str, Any]) -> None:
     Args:
         args (Dict[str, Any]): The command line arguments.
     """
-    print(f"Adding expense: {args.description} - ${args.amount}")
-    print(f"Expense added successfully")
+    try:
+        service = get_service()
+        expense = service.add_expense(args.description, args.amount)
+        print(f"Expense added successfully with ID: {expense.id}")
+    except ExpenseTrackerError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_list(args: Dict[str, Any]) -> None:
@@ -20,10 +38,16 @@ def cmd_list(args: Dict[str, Any]) -> None:
     Args:
         args (Dict[str, Any]): The command line arguments.
     """
-    print("ID   | Date      | Description   | Amount")
-    print("-" * 50)
-    print("1    | 2022-01-01| Test            | 10")
-    print("2    | 2022-01-02| Test            | 20")
+    try:
+        service = get_service()
+        expenses = service.list_expenses()
+        if not expenses:
+            print("No expenses found")
+            return
+        print(format_expense_table(expenses))
+    except ExpenseTrackerError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_delete(args: Dict[str, Any]) -> None:
@@ -32,8 +56,13 @@ def cmd_delete(args: Dict[str, Any]) -> None:
     Args:
         args (Dict[str, Any]): The command line arguments.
     """
-    print(f"Deleting expense with id: {args.id}")
-    print(f"Expense deleted successfully")
+    try:
+        service = get_service()
+        service.delete_expense(args.id)
+        print(f"Expense with ID {args.id} was deleted successfully")
+    except ExpenseTrackerError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_summary(args: Dict[str, Any]) -> None:
@@ -42,11 +71,13 @@ def cmd_summary(args: Dict[str, Any]) -> None:
     Args:
         args (Dict[str, Any]): The command line arguments.
     """
-    if args.month:
-        month_name = datetime(2024, args.month, 1).strftime("&B")
-        print(f"Total expenses for {month_name}: $10")
-    else:
-        print("Total expenses: $20")
+    try:
+        service = get_service()
+        summary = service.get_summary(args.month if hasattr(args, "month") else None)
+        print(format_summary(summary))
+    except ExpenseTrackerError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_update(args: Dict[str, Any]) -> None:
@@ -55,5 +86,14 @@ def cmd_update(args: Dict[str, Any]) -> None:
     Args:
         args (Dict[str, Any]): The command line arguments.
     """
-    print(f"Updating expense with id: {args.id}")
-    print(f"Expense updated successfully")
+    try:
+        service = get_service()
+        expense = service.update_expense(
+            args.id,
+            args.descripción if hasattr(args, "description") else None,
+            args.amount if hasattr(args, "amount") else None,
+        )
+        print("Expense updated successfully")
+    except ExpenseTrackerError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
