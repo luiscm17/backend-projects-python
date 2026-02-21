@@ -6,6 +6,7 @@ from models.expense import Expense
 class StorageInterface(ABC):
     """
     Storage interface for expenses.
+    Abstract base class for storage implementations.
     """
 
     @abstractmethod

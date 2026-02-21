@@ -3,6 +3,9 @@ from cli.parser import create_parser
 
 
 def main():
+    """
+    Main function.
+    """
     parser = create_parser()
     args = parser.parse_args()
 
