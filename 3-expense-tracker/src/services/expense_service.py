@@ -5,11 +5,12 @@ including adding, retrieving, and summarizing expenses.
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from models.expense import Expense, ExpenseSummary
 from models.storage import StorageInterface
-from models.exceptions import ExpenseNotFoundError, InvalidExpenseError
+from models.exceptions import ExpenseNotFoundError
 from services.validation import ValidationService
+from utils.date_utils import DateUtils
 
 
 class ExpenseService:
@@ -106,6 +107,7 @@ class ExpenseService:
         expense_id: int,
         description: Optional[str] = None,
         amount: Optional[float] = None,
+        date: Optional[datetime] = None,
     ) -> Expense:
         """
         Update an expense.
@@ -155,3 +157,134 @@ class ExpenseService:
         total = sum(e.amount for e in expenses)
 
         return ExpenseSummary(total=total, count=len(expenses), period=period)
+
+    def get_expenses_by_date_range(
+        self, start_date: datetime, end_date: datetime
+    ) -> List[Expense]:
+        """
+        Get expenses in a range of dates.
+        Args:
+            start_date: The start date.
+            end_date: The end date.
+        Returns:
+            List[Expense]: The expenses in the range of dates.
+        """
+        expenses = self.list_expenses()
+        return [e for e in expenses if start_date <= e.date <= end_date]
+
+    def get_expenses_by_month(self, year: int, month: int) -> List[Expense]:
+        """
+        Get expenses in a specific month.
+        Args:
+            year: The year.
+            month: The month.
+        Returns:
+            List[Expense]: The expenses in the month.
+        """
+        start_date, end_date = DateUtils.get_month_range(year, month)
+        return self.get_expenses_by_date_range(start_date, end_date)
+
+    def get_monthly_summary(self, year: int, month: int) -> ExpenseSummary:
+        """
+        Get a monthly resume datailed
+        """
+        expenses = self.get_expenses_by_month(year, month)
+        total = sum(e.amount for e in expenses)
+
+        month_name = datetime(year, month, 1).strftime("%B")
+        period = f"Month {month}"
+
+        return ExpenseSummary(total=total, count=len(expenses), period=period)
+
+    def get_yearly_summary(self, year: int) -> ExpenseSummary:
+        """
+        Get yearly summary.
+
+        Args:
+            year: Year
+
+        Returns:
+            ExpenseSummary: Summary of the year
+        """
+        start_date, end_date = DateUtils.get_year_range(year)
+        expenses = self.get_expenses_by_date_range(start_date, end_date)
+        total = sum(e.amount for e in expenses)
+
+        return ExpenseSummary(total=total, count=len(expenses), period=f"Year {year}")
+
+    def get_last_n_days_summary(self, days: int) -> ExpenseSummary:
+        """
+        Get summary of the last N days.
+
+        Args:
+            days: Number of days
+
+        Returns:
+            ExpenseSummary: Summary of the period
+        """
+        start_date, end_date = DateUtils.get_last_n_days(days)
+        expenses = self.get_expenses_by_date_range(start_date, end_date)
+        total = sum(e.amount for e in expenses)
+
+        return ExpenseSummary(
+            total=total, count=len(expenses), period=f"Last {days} days"
+        )
+
+    def search_expenses(self, query: str) -> List[Expense]:
+        """
+        Search expenses by description.
+
+        Args:
+            query: Search term
+
+        Returns:
+            List[Expense]: Expenses that match the search term
+        """
+        expenses = self.list_expenses()
+        query_lower = query.lower()
+
+        return [e for e in expenses if query_lower in e.description.lower()]
+
+    def get_expense_statistics(
+        self, expenses: Optional[List[Expense]] = None
+    ) -> Dict[str, Any]:
+        """
+        Get detailed statistics of expenses.
+
+        Args:
+            expenses: List of expenses (optional, uses all if not provided)
+
+        Returns:
+            Dict[str, Any]: Detailed statistics of expenses
+        """
+        if expenses is None:
+            expenses = self.list_expenses()
+
+        if not expenses:
+            return {
+                "total": 0.0,
+                "count": 0,
+                "average": 0.0,
+                "max": 0.0,
+                "min": 0.0,
+                "median": 0.0,
+            }
+
+        amounts = [e.amount for e in expenses]
+        amounts_sorted = sorted(amounts)
+
+        # Calculate median
+        n = len(amounts_sorted)
+        if n % 2 == 0:
+            median = (amounts_sorted[n // 2 - 1] + amounts_sorted[n // 2]) / 2
+        else:
+            median = amounts_sorted[n // 2]
+
+        return {
+            "total": sum(amounts),
+            "count": len(expenses),
+            "average": sum(amounts) / len(expenses),
+            "max": max(amounts),
+            "min": min(amounts),
+            "median": median,
+        }
